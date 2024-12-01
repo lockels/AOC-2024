@@ -1,13 +1,15 @@
 use std::fs;
 
 pub fn main() {
-    let input = fs::read_to_string("inputs/day_1.txt")
-        .expect("Unable to read file");
+    let input = fs::read_to_string("inputs/day_1.txt").expect("Unable to read file");
 
     let (left_list, right_list) = parse_input(&input);
-    let solution = solve(left_list, right_list);
 
-    println!("Solution: {}", solution);
+    let solution_1 = solve_1(left_list.clone(), right_list.clone());
+    println!("Solution: {}", solution_1);
+
+    let solution_2 = solve_2(left_list, right_list);
+    println!("Solution: {}", solution_2);
 }
 
 fn parse_input(input: &str) -> (Vec<i32>, Vec<i32>) {
@@ -27,7 +29,7 @@ fn parse_input(input: &str) -> (Vec<i32>, Vec<i32>) {
 fn parse_line(line: &str) -> Option<(i32, i32)> {
     let parts: Vec<&str> = line.split_whitespace().collect();
     if parts.len() == 2 {
-        if let (Ok(left), Ok(right)) = (parts[0].parse(), parts[1].parse()){
+        if let (Ok(left), Ok(right)) = (parts[0].parse(), parts[1].parse()) {
             return Some((left, right));
         }
     }
@@ -35,7 +37,7 @@ fn parse_line(line: &str) -> Option<(i32, i32)> {
 }
 
 // O(n log n) solution:
-fn solve(mut left_list: Vec<i32>, mut right_list: Vec<i32>) -> i32 {
+fn solve_1(mut left_list: Vec<i32>, mut right_list: Vec<i32>) -> i32 {
     left_list.sort();
     right_list.sort();
 
@@ -48,4 +50,19 @@ fn solve(mut left_list: Vec<i32>, mut right_list: Vec<i32>) -> i32 {
         sum += difference;
     }
     sum
+}
+
+fn solve_2(left_list: Vec<i32>, right_list: Vec<i32>) -> i32 {
+    let mut similarity_score = 0;
+
+    for value in left_list.iter() {
+        let similarity = right_list.clone()
+            .into_iter()
+            .filter(|x| x == value)
+            .count() as i32;
+
+        similarity_score += value * similarity;
+    }
+
+    similarity_score
 }

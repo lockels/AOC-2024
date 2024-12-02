@@ -51,5 +51,17 @@ fn solve_2(reports: &[Vec<i32>]) -> i32 {
 }
 
 fn is_safe_report_2(report: &[i32]) -> bool {
-    todo!();
+    if is_safe_report_1(report) {
+        return true;
+    }
+
+    for i in 0..report.len() {
+        let mut modified_report = report.to_vec();
+        modified_report.remove(i);
+        if is_safe_report_1(&modified_report) {
+            return true;
+        }
+    }
+
+    false
 }

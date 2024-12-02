@@ -25,10 +25,7 @@ fn parse_line(line: &str) -> Vec<i32> {
 }
 
 fn solve(reports: &[Vec<i32>], is_safe_fn: fn(&[i32]) -> bool) -> i32 {
-    reports
-        .iter()
-        .filter(|report| is_safe_fn(report))
-        .count() as i32
+    reports.iter().filter(|report| is_safe_fn(report)).count() as i32
 }
 
 fn is_safe_report_1(report: &[i32]) -> bool {

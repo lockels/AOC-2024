@@ -7,10 +7,10 @@ pub fn main() {
 
     let reports = parse_input(&input);
 
-    let solution_1 = solve_1(&reports);
+    let solution_1 = solve(&reports, is_safe_report_1);
     println!("{}", solution_1);
 
-    let solution_2 = solve_2(&reports);
+    let solution_2 = solve(&reports, is_safe_report_2);
     println!("{}", solution_2);
 }
 
@@ -24,10 +24,10 @@ fn parse_line(line: &str) -> Vec<i32> {
         .collect()
 }
 
-fn solve_1(reports: &[Vec<i32>]) -> i32 {
+fn solve(reports: &[Vec<i32>], is_safe_fn: fn(&[i32]) -> bool) -> i32 {
     reports
         .iter()
-        .filter(|report| is_safe_report_1(report))
+        .filter(|report| is_safe_fn(report))
         .count() as i32
 }
 
@@ -41,13 +41,6 @@ fn is_safe_report_1(report: &[i32]) -> bool {
     });
 
     (is_increasing || is_decreasing) && is_valid_range
-}
-
-fn solve_2(reports: &[Vec<i32>]) -> i32 {
-    reports
-        .iter()
-        .filter(|report| is_safe_report_2(report))
-        .count() as i32
 }
 
 fn is_safe_report_2(report: &[i32]) -> bool {

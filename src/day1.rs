@@ -1,7 +1,9 @@
 use std::fs;
 
-pub fn main() {
-    let input = fs::read_to_string("inputs/day_1.txt").expect("Unable to read file");
+#[allow(dead_code)]
+
+pub fn mday1ain() {
+    let input = fs::read_to_string("inputs/day1.txt").expect("Unable to read file");
 
     let (left_list, right_list) = parse_input(&input);
 

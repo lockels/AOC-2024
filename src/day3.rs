@@ -37,5 +37,6 @@ fn solve_2(input: &str) -> i32 {
         let result_str = result[0];
         sum += solve_1(result_str);
     }
+
     sum
 }

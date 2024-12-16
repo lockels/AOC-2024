@@ -6,16 +6,19 @@ pub fn main() {
     let input = fs::read_to_string("inputs/day4.txt").expect("Unable to open file");
     let puzzle = parse_input(&input);
 
-    let solution = solve(&puzzle, "XMAS");
-    println!("{}", solution);
+    // let solution1 = solve_1(&puzzle, "XMAS");
+    // println!("{}", solution1);
+
+    let solution2 = solve_2(&puzzle);
+    println!("{}", solution2);
 }
 
 fn parse_input(input: &str) -> Vec<Vec<char>> {
     input.lines().map(|line| line.chars().collect()).collect()
 }
 
-fn solve(puzzle: &[Vec<char>], word: &str) -> i32 {
-    let directions = [
+fn solve_1(puzzle: &[Vec<char>], word: &str) -> i32 {
+    let dirs = [
         (0, 1),   // Right
         (0, -1),  // Left
         (1, 0),   // Down
@@ -26,14 +29,11 @@ fn solve(puzzle: &[Vec<char>], word: &str) -> i32 {
         (-1, -1), // Diagonal up-left
     ];
 
-    let rows = puzzle.len() as usize;
-    let cols = puzzle[0].len() as usize;
-
     let mut count = 0;
 
-    for row in 0..rows {
-        for col in 0..cols {
-            for &(dx, dy) in &directions {
+    for row in 0..puzzle.len() {
+        for col in 0..puzzle[0].len() {
+            for &(dx, dy) in &dirs {
                 if found_word_in_cur_direction(word, puzzle, row, col, dx, dy) {
                     count += 1;
                 }
@@ -53,9 +53,8 @@ fn found_word_in_cur_direction(
     dy: i32,
 ) -> bool {
     let word_chars: Vec<char> = word.chars().collect();
-    let word_len = word_chars.len();
 
-    for i in 0..word_len {
+    for i in 0..word.len() {
         let cur_row = row as i32 + i as i32 * dx;
         let cur_col = col as i32 + i as i32 * dy;
 
@@ -66,7 +65,7 @@ fn found_word_in_cur_direction(
         let cur_row = cur_row as usize;
         let cur_col = cur_col as usize;
 
-        if cur_row >= puzzle.len() || cur_col >= puzzle[0].len() {
+        if cur_row >= puzzle.len() || cur_col >= puzzle.len() {
             return false;
         }
 
@@ -76,4 +75,36 @@ fn found_word_in_cur_direction(
     }
 
     true
+}
+
+fn solve_2(puzzle: &[Vec<char>]) -> i32 {
+    let dirs = [
+        (-1, -1), // Top left
+        (-1, 1),  // Top right
+        (1, -1),  // Bottom left
+        (1, 1),   // Bottom right
+    ];
+
+    let mut count = 0;
+
+    for row in 1..puzzle.len() - 1 {
+        for col in 1..puzzle[0].len() - 1 {
+            if puzzle[row][col] == 'A' {
+                let mut s: String = String::default();
+                for &(dx, dy) in &dirs {
+                    let new_row = row as isize + dx;
+                    let new_col = col as isize + dy;
+                    s.push(puzzle[new_row as usize][new_col as usize]);
+                }
+
+                if s == "MSMS" || s == "SSMM" || s == "MMSS" || s == "SMSM" {
+                    count += 1;
+                }
+
+                println!("{}", s);
+            }
+        }
+    }
+
+    count
 }

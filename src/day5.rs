@@ -36,30 +36,27 @@ fn parse_updates(input: &str) -> Vec<Vec<u32>> {
 }
 
 fn solve(rules: &[(u32, u32)], updates: &[Vec<u32>]) -> u32 {
-    let mut sum = 0;
-
-    for update in updates {
-        if follows_rules(rules, update) {
-            sum += update[update.len() / 2];
-        }
-    }
-
-    sum
+    updates
+        .iter()
+        .filter(|update| follows_rules(rules, update))
+        .map(|update| update[update.len() / 2])
+        .sum()
 }
 
 fn follows_rules(rules: &[(u32, u32)], update: &[u32]) -> bool {
-    let mut map: HashMap<u32, u32> = HashMap::new();
+    let mut positions = HashMap::with_capacity(update.len());
 
     for (i, num) in update.iter().enumerate() {
-        map.insert(*num, i as u32);
+        positions.insert(*num, i as u32);
     }
 
-    for (rule_a, rule_b) in rules {
-        if map.contains_key(rule_a) && map.contains_key(rule_b) && map.get(rule_a) > map.get(rule_b)
-        {
-            return false;
+    for &(a, b) in rules {
+        match (positions.get(&a), positions.get(&b)) {
+            (Some(&pos_a), Some(&pos_b)) if pos_a > pos_b => return false,
+            _ => continue,
         }
     }
+
 
     true
 }

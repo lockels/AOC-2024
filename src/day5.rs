@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fmt::write, fs, iter::Map};
+use std::{collections::HashMap, fs};
 
 #[allow(dead_code)]
 
@@ -9,8 +9,11 @@ pub fn main() {
     let rules = parse_rules(fst);
     let updates = parse_updates(snd);
 
-    let solution = solve(&rules, &updates);
-    println!("{}", solution);
+    let solution_1 = solve_1(&rules, &updates);
+    println!("{}", solution_1);
+
+    let solution_2 = solve_2(&rules, &updates);
+    println!("{}", solution_2);
 }
 
 fn parse_rules(input: &str) -> Vec<(u32, u32)> {
@@ -35,7 +38,7 @@ fn parse_updates(input: &str) -> Vec<Vec<u32>> {
         .collect()
 }
 
-fn solve(rules: &[(u32, u32)], updates: &[Vec<u32>]) -> u32 {
+fn solve_1(rules: &[(u32, u32)], updates: &[Vec<u32>]) -> u32 {
     updates
         .iter()
         .filter(|update| follows_rules(rules, update))
@@ -46,8 +49,8 @@ fn solve(rules: &[(u32, u32)], updates: &[Vec<u32>]) -> u32 {
 fn follows_rules(rules: &[(u32, u32)], update: &[u32]) -> bool {
     let mut positions = HashMap::with_capacity(update.len());
 
-    for (i, num) in update.iter().enumerate() {
-        positions.insert(*num, i as u32);
+    for (i, page_num) in update.iter().enumerate() {
+        positions.insert(*page_num, i as u32);
     }
 
     for &(a, b) in rules {
@@ -57,6 +60,20 @@ fn follows_rules(rules: &[(u32, u32)], update: &[u32]) -> bool {
         }
     }
 
-
     true
+}
+
+fn solve_2(rules: &[(u32, u32)], updates: &[Vec<u32>]) -> u32 {
+    updates
+        .iter()
+        .filter(|update| !follows_rules(rules, update))
+        .map(|update| reordered_middle(rules, update))
+        .sum()
+}
+
+fn reordered_middle(rules: &[(u32, u32)], update: &[u32]) -> u32 {
+
+
+
+    todo!()
 }

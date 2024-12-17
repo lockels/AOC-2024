@@ -6,8 +6,8 @@ pub fn main() {
     let input = fs::read_to_string("inputs/day4.txt").expect("Unable to open file");
     let puzzle = parse_input(&input);
 
-    // let solution1 = solve_1(&puzzle, "XMAS");
-    // println!("{}", solution1);
+    let solution1 = solve_1(&puzzle, "XMAS");
+    println!("{}", solution1);
 
     let solution2 = solve_2(&puzzle);
     println!("{}", solution2);

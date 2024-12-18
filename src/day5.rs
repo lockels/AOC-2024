@@ -67,13 +67,56 @@ fn solve_2(rules: &[(u32, u32)], updates: &[Vec<u32>]) -> u32 {
     updates
         .iter()
         .filter(|update| !follows_rules(rules, update))
-        .map(|update| reordered_middle(rules, update))
+        .map(|update| {
+            let sorted = sort_by_rules(rules, update);
+            sorted[sorted.len() / 2]
+        })
         .sum()
 }
 
-fn reordered_middle(rules: &[(u32, u32)], update: &[u32]) -> u32 {
 
+fn sort_by_rules(rules: &[(u32, u32)], update: &[u32]) -> Vec<u32> {
+    let relvant_rules: Vec<(u32, u32)> = rules
+        .iter()
+        .filter(|(a, b)| update.contains(a) && update.contains(b))
+        .copied()
+        .collect();
 
+    let mut in_degree: HashMap<u32, u32> = HashMap::new();
+    for &page in update {
+        in_degree.insert(page, 0);
+    }
 
-    todo!()
+    for &(_a, b) in &relvant_rules {
+        if let Some(count) = in_degree.get_mut(&b) {
+            *count += 1;
+        }
+    }
+
+    let mut answer: Vec<u32> = Vec::with_capacity(update.len());
+    let mut remaining: Vec<u32> = update.to_vec();
+
+    while !remaining.is_empty() {
+        let mut next_round = Vec::new();
+
+        for &page in &remaining {
+            if *in_degree.get(&page).unwrap_or(&0) == 0 {
+                answer.push(page);
+                for &(a, b) in &relvant_rules {
+                    if a == page {
+                        if let Some(count) = in_degree.get_mut(&b) {
+                            *count -= 1;
+                        }
+                    }
+                }
+            } else {
+                next_round.push(page);
+            }
+        }
+
+        remaining = next_round;
+    }
+
+    answer
 }
+

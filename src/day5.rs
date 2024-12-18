@@ -74,7 +74,6 @@ fn solve_2(rules: &[(u32, u32)], updates: &[Vec<u32>]) -> u32 {
         .sum()
 }
 
-
 fn sort_by_rules(rules: &[(u32, u32)], update: &[u32]) -> Vec<u32> {
     let relvant_rules: Vec<(u32, u32)> = rules
         .iter()
@@ -98,7 +97,6 @@ fn sort_by_rules(rules: &[(u32, u32)], update: &[u32]) -> Vec<u32> {
 
     while !remaining.is_empty() {
         let mut next_round = Vec::new();
-
         for &page in &remaining {
             if *in_degree.get(&page).unwrap_or(&0) == 0 {
                 answer.push(page);
@@ -113,10 +111,8 @@ fn sort_by_rules(rules: &[(u32, u32)], update: &[u32]) -> Vec<u32> {
                 next_round.push(page);
             }
         }
-
         remaining = next_round;
     }
 
     answer
 }
-

@@ -1,4 +1,4 @@
-use std::{collections::HashSet, fs};
+use std::{collections::HashSet, fs, usize};
 
 #[allow(dead_code)]
 
@@ -23,7 +23,7 @@ fn locate_guard(lab_maze: &[Vec<char>]) -> (usize, usize) {
         .expect("Guard is not in the map")
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Copy, Clone)]
 enum Direction {
     Up,
     Right,
@@ -31,58 +31,46 @@ enum Direction {
     Left,
 }
 
-
-fn solve(lab_maze: &[Vec<char>], guard: &(usize, usize)) -> u32 {
-    let (mut row, mut col) = guard.to_owned();
-    let mut cur_dir = Direction::Up;
-
-    let mut visited = HashSet::from([(row, col)]);
-
-    while row < lab_maze.len() && col < lab_maze[0].len() {
-        match cur_dir {
-            Direction::Up => {
-                if row == 0 {
-                    break;
-                } else if lab_maze[row - 1][col] == '#' {
-                    cur_dir = Direction::Right;
-                } else {
-                    row -= 1;
-                    visited.insert((row, col));
-                }
-            }
-            Direction::Right => {
-                if col + 1 >= lab_maze[0].len() {
-                    break;
-                } else if lab_maze[row][col + 1] == '#' {
-                    cur_dir = Direction::Down;
-                } else {
-                    col += 1;
-                    visited.insert((row, col));
-                }
-            }
-            Direction::Down => {
-                if row + 1 >= lab_maze.len() {
-                    break;
-                } else if lab_maze[row + 1][col] == '#' {
-                    cur_dir = Direction::Left;
-                } else {
-                    row += 1;
-                    visited.insert((row, col));
-                }
-            }
-            Direction::Left => {
-                if col == 0 {
-                    break;
-                } else if lab_maze[row][col - 1] == '#' {
-                    cur_dir = Direction::Up;
-                } else {
-                    col -= 1;
-                    visited.insert((row, col));
-                }
-            }
+impl Direction {
+    fn turn_90_degrees(self) -> Self {
+        match self {
+            Direction::Up => Direction::Right,
+            Direction::Right => Direction::Down,
+            Direction::Down => Direction::Left,
+            Direction::Left => Direction::Up,
         }
     }
 
-    visited.len() as u32
+    fn move_forward(self, row: usize, col: usize) -> (usize, usize) {
+        match self {
+            Direction::Up => (row - 1, col),
+            Direction::Right => (row, col + 1),
+            Direction::Down => (row + 1, col),
+            Direction::Left => (row, col - 1),
+        }
+    }
 }
 
+fn solve(lab_maze: &[Vec<char>], guard: &(usize, usize)) -> usize {
+    let (mut row, mut col) = guard.to_owned();
+    let mut cur_dir = Direction::Up;
+    let mut visited = HashSet::from([(row, col)]);
+
+    loop {
+        let (next_row, next_col) = cur_dir.move_forward(row, col);
+
+        if next_row >= lab_maze.len() || next_col >= lab_maze[0].len() {
+            break;
+        }
+
+        if lab_maze[next_row][next_col] == '#' {
+            cur_dir = cur_dir.turn_90_degrees();
+        } else {
+            row = next_row;
+            col = next_col;
+            visited.insert((row, col));
+        }
+    }
+
+    visited.len()
+}

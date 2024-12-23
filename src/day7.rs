@@ -3,7 +3,7 @@ use std::fs;
 #[allow(dead_code)]
 
 pub fn main() {
-    let input = fs::read_to_string("inputs/day7.txt").expect("Unable to open file");
+    let input = fs::read_to_string("inputs/test.txt").expect("Unable to open file");
     let equations = parse_equations(&input);
 
     let solution_1 = solve(&equations, is_possible_result_1);
@@ -55,8 +55,8 @@ fn is_possible_result_1(answer: u64, values: &[u64]) -> bool {
 
 fn is_possible_result_2(answer: u64, values: &[u64]) -> bool {
     fn concat(current: u64, next: u64) -> u64 {
-        let next_str = next.to_string();
         let current_str = current.to_string();
+        let next_str = next.to_string();
         format!("{}{}", current_str, next_str).parse().unwrap()
     }
 

@@ -39,10 +39,6 @@ where
 }
 
 fn is_possible_result_1(answer: u64, values: &[u64]) -> bool {
-    if values.is_empty() {
-        return false;
-    }
-
     fn helper(answer: u64, index: usize, current: u64, values: &[u64]) -> bool {
         if index == values.len() {
             return current == answer;
@@ -58,10 +54,6 @@ fn is_possible_result_1(answer: u64, values: &[u64]) -> bool {
 }
 
 fn is_possible_result_2(answer: u64, values: &[u64]) -> bool {
-    if values.is_empty() {
-        return false;
-    }
-
     fn concat(current: u64, next: u64) -> u64 {
         let next_str = next.to_string();
         let current_str = current.to_string();

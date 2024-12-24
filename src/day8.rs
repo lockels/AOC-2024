@@ -1,11 +1,10 @@
+use itertools::Itertools;
 use std::{
     collections::{HashMap, HashSet},
-    fs,
+    fs, usize,
 };
 
 #[allow(dead_code)]
-use itertools::Itertools;
-
 pub fn main() {
     let input = fs::read_to_string("inputs/day8.txt").expect("Unable to open file");
     let antennas = parse_antennas(&input);
@@ -36,15 +35,14 @@ fn parse_antennas(input: &str) -> HashMap<char, Vec<(usize, usize)>> {
 }
 
 fn solve(grid: &[Vec<char>], antennas: &HashMap<char, Vec<(usize, usize)>>) -> usize {
-    let mut antinodes = HashSet::new();
-    for positions in antennas.values() {
-        for pair in positions.iter().permutations(2) {
+    let antinodes: HashSet<(usize, usize)> = antennas
+        .values()
+        .flat_map(|positions| positions.iter().permutations(2))
+        .filter_map(|pair| {
             let (from, to) = (pair[0], pair[1]);
-            if let Some(antinode) = find_antinode(grid, *from, *to) {
-                antinodes.insert(antinode);
-            }
-        }
-    }
+            find_antinode(grid, *from, *to)
+        })
+        .collect();
     antinodes.len()
 }
 

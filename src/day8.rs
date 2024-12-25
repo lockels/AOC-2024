@@ -12,6 +12,7 @@ pub fn main() {
 
     let solution_1 = solve_1(&grid, &antennas);
     let solution_2 = solve_2(&grid, &antennas);
+
     println!("{}", solution_1);
     println!("{}", solution_2);
 }

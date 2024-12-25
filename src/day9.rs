@@ -2,7 +2,7 @@ use std::{fs, usize};
 
 #[allow(dead_code)]
 pub fn main() {
-    let input = fs::read_to_string("inputs/day9.txt").expect("Unable to open file");
+    let input = fs::read_to_string("inputs/test.txt").expect("Unable to open file");
     let blocks = parse_disk_map(&input);
 
     let solution = solve(&blocks);
@@ -35,21 +35,22 @@ fn solve(blocks: &[Option<usize>]) -> usize {
         moveable -= 1;
     }
 
-    let mut updated_blocks = blocks.to_vec();
+    let mut coalesced_blocks = blocks.to_vec();
 
-    while moveable >= first_free {
-        updated_blocks[first_free] = updated_blocks[moveable];
-        updated_blocks[moveable] = None;
+    while moveable > first_free {
+        coalesced_blocks[first_free] = coalesced_blocks[moveable];
+        coalesced_blocks[moveable] = None;
 
-        while let None = updated_blocks[moveable] {
-            moveable -= 1;
-        }
-        while let Some(_) = updated_blocks[first_free] {
+        while let Some(_) = coalesced_blocks[first_free] {
             first_free += 1;
+        }
+
+        while let None = coalesced_blocks[moveable] {
+            moveable -= 1;
         }
     }
 
-    calculate_checksum(&updated_blocks)
+    calculate_checksum(&coalesced_blocks)
 }
 
 fn calculate_checksum(ordered_blocks: &[Option<usize>]) -> usize {

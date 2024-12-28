@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fs};
+use std::{fs, usize};
 
 #[allow(dead_code)]
 pub fn main() {
@@ -7,9 +7,8 @@ pub fn main() {
 
     println!("{:?}", blocks);
     println!();
-    println!("{:?}", calculate_file_lengths(&blocks));
-    // let solution_1 = solve_1(&blocks);
-    // println!("{}", solution_1);
+    let solution_1 = solve_1(&blocks);
+    println!("{}", solution_1);
     // let solution_2 = solve_2(&blocks);
     // println!("{}", solution_2);
 }
@@ -30,35 +29,22 @@ fn parse_file_system(input: &str) -> Vec<Option<usize>> {
 }
 
 fn solve_1(blocks: &[Option<usize>]) -> usize {
-    let mut first_free = 0;
-    while let Some(_) = blocks[first_free] {
-        first_free += 1;
-    }
-
-    let mut moveable = blocks.len() - 1;
-    while let None = blocks[moveable] {
-        moveable -= 1;
-    }
-
     let mut ordered_blocks = blocks.to_vec();
+    let (mut left, mut right) = (0, ordered_blocks.len() - 1);
 
-    while moveable > first_free {
-        ordered_blocks.swap(first_free, moveable);
-
-        while let Some(_) = ordered_blocks[first_free] {
-            first_free += 1;
-        }
-
-        while let None = ordered_blocks[moveable] {
-            moveable -= 1;
+    while left < right {
+        if ordered_blocks[left].is_some() {
+            left += 1;
+        } else if ordered_blocks[right].is_none() {
+            right -= 1;
+        } else {
+            ordered_blocks.swap(left, right);
+            left += 1;
+            right -= 1;
         }
     }
 
     calculate_checksum(&ordered_blocks)
-}
-
-fn solve_2(blocks: &[Option<usize>]) -> usize {
-    todo!()
 }
 
 fn calculate_checksum(ordered_blocks: &[Option<usize>]) -> usize {
@@ -67,41 +53,4 @@ fn calculate_checksum(ordered_blocks: &[Option<usize>]) -> usize {
         .enumerate()
         .filter_map(|(i, block)| block.map(|b| i * b))
         .sum()
-}
-
-fn calculate_file_lengths(blocks: &[Option<usize>]) -> HashMap<Option<usize>, (usize, usize)> {
-    let mut result = HashMap::new();
-    let mut current_start = None;
-    let mut count = 0;
-    let mut cur_block = None;
-
-    for (index, &block) in blocks.iter().enumerate() {
-        let mut cur_num = usize::MAX;
-        match block {
-            Some(num) => {
-                if current_start.is_none() {
-                    cur_num = num;
-                    count = 1;
-                    cur_block = block;
-                    current_start = Some(index);
-                } else {
-                    count += 1;
-                }
-            }
-            None => {
-                if let Some(start) = current_start {
-                    result.insert(cur_block, (start, count));
-                    count = 0;
-                    cur_block = None;
-                    current_start = None;
-                }
-            }
-        }
-    }
-
-    if let Some(start) = current_start {
-        result.insert(cur_block, (start, count));
-    }
-
-    result
 }

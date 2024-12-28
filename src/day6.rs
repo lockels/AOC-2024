@@ -98,7 +98,6 @@ fn solve_2(lab_maze: &[Vec<char>]) -> HashSet<(usize, usize)> {
     result
 }
 
-
 fn obstacle_causes_loop(lab_maze: &[Vec<char>], pos: (usize, usize)) -> bool {
     let (mut guard_row, mut guard_col) = locate_guard(&lab_maze);
     if pos == (guard_row, guard_col) {
@@ -136,4 +135,3 @@ fn obstacle_causes_loop(lab_maze: &[Vec<char>], pos: (usize, usize)) -> bool {
         }
     }
 }
-

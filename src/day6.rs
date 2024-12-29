@@ -9,8 +9,8 @@ pub fn main() {
     let guard = locate_guard(&lab_maze);
     println!("{:?}", guard);
 
-    let solution_1 = solve_1(&lab_maze);
-    println!("{}", solution_1.len());
+    // let solution_1 = solve_1(&lab_maze);
+    // println!("{}", solution_1.len());
 
     let solution_2 = solve_2(&lab_maze);
     println!("{}", solution_2.len());
@@ -87,11 +87,12 @@ fn solve_1(lab_maze: &[Vec<char>]) -> HashSet<(usize, usize)> {
 fn solve_2(lab_maze: &[Vec<char>]) -> HashSet<(usize, usize)> {
     let mut result = HashSet::new();
 
-    for (i, row) in lab_maze.iter().enumerate() {
-        for (j, _) in row.iter().enumerate() {
-            if obstacle_causes_loop(lab_maze, (i, j)) {
-                result.insert((i, j));
-            }
+    let original_path = solve_1(&lab_maze);
+
+    for pos in original_path  {
+        if obstacle_causes_loop(lab_maze, pos) {
+            println!("{:?}", pos);
+            result.insert(pos);
         }
     }
 
@@ -114,15 +115,11 @@ fn obstacle_causes_loop(lab_maze: &[Vec<char>], pos: (usize, usize)) -> bool {
     loop {
         let (next_row, next_col) = cur_dir.move_forward(guard_row, guard_col);
 
-        if visited.contains(&(guard_row, guard_col, cur_dir)) {
+        if visited.contains(&(next_row, next_row, cur_dir)) {
             return true;
         }
 
-        if next_row >= lab_maze.len()
-            || next_col >= lab_maze[0].len()
-            || next_row == usize::MAX
-            || next_col == usize::MAX
-        {
+        if !in_bounds(&lab_maze, next_row as i32, next_col as i32){
             return false;
         }
 
@@ -134,4 +131,9 @@ fn obstacle_causes_loop(lab_maze: &[Vec<char>], pos: (usize, usize)) -> bool {
             visited.insert((guard_row, guard_col, cur_dir));
         }
     }
+}
+
+
+fn in_bounds(lab_maze: &[Vec<char>], row: i32, col: i32) -> bool {
+    row >= 0 && col >= 0 && row < lab_maze.len() as i32 && col < lab_maze[0].len() as i32
 }

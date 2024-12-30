@@ -162,9 +162,6 @@ fn find_all_paths_dfs(
     path_count
 }
 
-
-
-
 fn in_bounds(grid: &[Vec<char>], row: i32, col: i32) -> bool {
     row >= 0 && col >= 0 && row < grid.len() as i32 && col < grid[0].len() as i32
 }

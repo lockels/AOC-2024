@@ -89,7 +89,7 @@ fn solve_2(lab_maze: &[Vec<char>]) -> HashSet<(usize, usize)> {
 
     let original_path = solve_1(&lab_maze);
 
-    for pos in original_path  {
+    for pos in original_path {
         if obstacle_causes_loop(lab_maze, pos) {
             println!("{:?}", pos);
             result.insert(pos);
@@ -119,7 +119,7 @@ fn obstacle_causes_loop(lab_maze: &[Vec<char>], pos: (usize, usize)) -> bool {
             return true;
         }
 
-        if !in_bounds(&lab_maze, next_row as i32, next_col as i32){
+        if !in_bounds(&lab_maze, next_row as i32, next_col as i32) {
             return false;
         }
 
@@ -132,7 +132,6 @@ fn obstacle_causes_loop(lab_maze: &[Vec<char>], pos: (usize, usize)) -> bool {
         }
     }
 }
-
 
 fn in_bounds(lab_maze: &[Vec<char>], row: i32, col: i32) -> bool {
     row >= 0 && col >= 0 && row < lab_maze.len() as i32 && col < lab_maze[0].len() as i32

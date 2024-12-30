@@ -19,10 +19,9 @@ fn parse_input(input: &str) -> Vec<u64> {
 }
 
 fn solve_memo(stones: &[u64], blinks: usize) -> usize {
-    let mut cache = HashMap::new();
     stones
         .iter()
-        .map(|&stone| blink_memo(stone, blinks, &mut cache))
+        .map(|&stone| blink_memo(stone, blinks, &mut HashMap::new()))
         .sum()
 }
 

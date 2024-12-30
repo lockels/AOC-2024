@@ -45,7 +45,6 @@ fn solve_1(blocks: &[Option<usize>]) -> usize {
     calculate_checksum(&ordered_blocks)
 }
 
-
 fn solve_2(blocks: &[Option<usize>], input: &str) -> usize {
     let mut ordered_blocks = blocks.to_vec();
     let mut right = ordered_blocks.len();
@@ -113,7 +112,6 @@ fn solve_2(blocks: &[Option<usize>], input: &str) -> usize {
 
     calculate_checksum(&ordered_blocks)
 }
-
 
 fn calculate_checksum(ordered_blocks: &[Option<usize>]) -> usize {
     ordered_blocks

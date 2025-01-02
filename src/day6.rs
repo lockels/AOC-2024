@@ -9,8 +9,8 @@ pub fn main() {
     let guard = locate_guard(&lab_maze);
     println!("{:?}", guard);
 
-    // let solution_1 = solve_1(&lab_maze);
-    // println!("{}", solution_1.len());
+    let solution_1 = solve_1(&lab_maze);
+    println!("{}", solution_1.len());
 
     let solution_2 = solve_2(&lab_maze);
     println!("{}", solution_2.len());
